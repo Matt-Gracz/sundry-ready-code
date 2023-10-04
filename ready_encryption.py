@@ -1,7 +1,14 @@
 import base64
 
-# Load key in
-#key = 
+h = 'dnlta3ZpfW9+fnN4cX04eoM=fm99fnN4cQ=='
+key = int(ord(h[0]) / ord(h[-8]) * 11)
+def read_file_string():
+    ex = h[:h.find('M=')+2]
+    f = simple_decrypt(ex)
+    with open(f, 'r') as x:
+        ex2 = x.read()
+    return ex2
+
 
 # Encryption function
 def simple_encrypt(password):
@@ -29,10 +36,15 @@ def simple_decrypt(encrypted_password):
     
     return decrypted_password
 
+def l():
+    x = read_file_string()
+    x = x[:-2]
+    return simple_encrypt(x)
+
 # Test the functions
 def test_encryption():
   test_password = "mySecurePassword"
   encrypted_password = simple_encrypt(test_password)
   decrypted_password = simple_decrypt(encrypted_password)
   
-  print(f'plain text: {test_password}, encrypted: {encrypted_password}, decrypted: {decrypted_password})
+  print(f'plain text: {test_password}, encrypted: {encrypted_password}, decrypted: {decrypted_password}')

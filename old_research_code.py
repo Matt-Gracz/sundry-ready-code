@@ -1,6 +1,6 @@
 ## 2023-09-15 mgracz: I used this code to figure out the best way to write the actual ETL code.
 ## so consider this research, essentially, on how many days' worth of ReADY requests I could get
-## with 1 REST request.  The answer is : 1 ReADY request per REST request.
+## with 1 REST request.  The answer is : 1 day's worth of ReADY requests per REST request.
 import requests
 import json
 import csv

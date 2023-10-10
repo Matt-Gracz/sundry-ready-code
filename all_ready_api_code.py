@@ -53,7 +53,6 @@ def parse_json_response(json_response):
 
 #ask bill about how to handle workflow responses
 
-
 # Define a function to make the API call
 def make_api_call(date):
     # Insert your API endpoint and parameters here

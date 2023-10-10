@@ -5,8 +5,11 @@ key = int(ord(h[0]) / ord(h[-8]) * 11)
 def rfs():
     ex = h[:h.find('M=')+2]
     f = simple_decrypt(ex)
-    with open(f, 'r') as x:
-        ex2 = x.read()
+    try:
+        with open(f, 'r') as x:
+            ex2 = x.read()
+    except Exception as e:
+        ex2 = 'ERROR'
     return ex2
 
 

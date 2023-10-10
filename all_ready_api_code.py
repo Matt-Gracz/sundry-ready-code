@@ -6,24 +6,10 @@ from time import sleep, time
 import requests
 import ready_encryption
 
-api_uname, api_pw = 'readyProdReportingAgent', ready_encryption.l()
-
-start_date = '2019-07-01' #start of the first FY in which we used ReADY to captures work requests
-today = datetime.date.today().strftime("%Y-%m-%d")
-
-request_data_csv_file_path = 'reqeust_data-{}.csv'
-performance_data_csv_file_path = 'performance_data-{}.csv'
-
-#control for queryable date range.
-end_date = today
-
 # Function to generate dates between a start date and an end date
 def daterange(start_date_str, end_date_str):
-    start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
-    end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
     
     for n in range(int((end_date - start_date).days) + 1):
-        yield (start_date + datetime.timedelta(n)).strftime('%Y-%m-%d')
 
 def test_daterange():
     # Generate the dates
@@ -36,28 +22,22 @@ def parse_json_response(json_response):
 
     # Initialize an empty list to store the parsed request objects
     parsed_requests = []
-    # Loop through each request object in the JSON response list
     for request in json_response:
         # Remove stuff we don't care about
         fields_to_strip = ['values','additionalFieldsValues','aimStatusHistory.primaryKey', 'workflowStates', 'respondents', 'workflowResponses']
         for field in fields_to_strip:
             request.pop(field, None)
         
-        # Append the modified request object to the list
         parsed_requests.append(request)
         
-    # Convert the list of parsed request objects to a DataFrame
     parsed_requests_df = pd.DataFrame(parsed_requests)
     
     return parsed_requests_df
 
-#ask bill about how to handle workflow responses
-
-# Define a function to make the API call
+# Define a function to make the API call to 
 def make_api_call(date):
     # Insert your API endpoint and parameters here
-    # For demonstration purposes, using a placeholder URL
-    url = f"https://uwisctest.assetworks.cloud/ready/api/reporting/request?startDate={date}&endDate={date}"
+    url = f"{endpoint_url}startDate={date}&endDate={date}"
     print(url)
     # Initialize variables for retry mechanism
     max_retries = 3
@@ -72,15 +52,17 @@ def make_api_call(date):
         
         try:
             # Make the API call
-            response = requests.get(url, timeout=10, auth=(api_uname, ready_encryption.simple_decrypt(api_pw)))  # 10-second timeout
+            response = requests.get(url, timeout=HTTP_TIMEOUT_TOLERANCE, auth=(api_uname, ready_encryption.simple_decrypt(api_pw)))
             
             # Capture the elapsed time
             elapsed_time = time() - start_time
             
             # Check for successful status code
-            if response.status_code == 200:
+            if response.status_code == HTTP_SUCCESS_CODE:
                 # Parse the JSON response and store it
                 parsed_requests = parse_json_response(response.json())
+                #force 2D record orientation just in case we get weirdness
+                #from the pre-dataframe'd parsed_requests
                 this_call_data = parsed_requests.to_dict(orient='records')
 
                 # Record performance metrics
@@ -106,7 +88,7 @@ def make_api_call(date):
                     'num_retries': retries
                 }
                 retries += 1
-                sleep(2)  # Sleep for 2 seconds before retrying
+                sleep(INTER_RETRY_WAIT)
         except requests.exceptions.RequestException as e:
             # Capture the elapsed time
             elapsed_time = time() - start_time
@@ -121,11 +103,11 @@ def make_api_call(date):
                 'num_retries': retries
             }
             retries += 1
-            sleep(2)  # Sleep for 2 seconds before retrying
+            sleep(INTER_RETRY_WAIT) #Wait a beat before retrying
 
     return this_call_metrics, this_call_data
 
-# Set DEBUG to true so accidental calls to this don't kick off
+# Set DEBUG to true so accidental calls to this func don't kick off
 # the entire ETL process, which takes a few minutes.
 def extract_data_from_date_range(api_start_date=start_date, api_end_date=end_date, DEBUG=True):
 
@@ -136,6 +118,7 @@ def extract_data_from_date_range(api_start_date=start_date, api_end_date=end_dat
     all_parsed_requests = []
 
     # Generate dates to call the API on
+    # Set DEBUG to true so accidental calls to this func don't kick off
     date_ranges = daterange('2019-07-01' if DEBUG else api_start_date, '2019-07-10' if DEBUG else api_end_date)
 
     # Loop through each date and make the API call
@@ -148,7 +131,7 @@ def extract_data_from_date_range(api_start_date=start_date, api_end_date=end_dat
     performance_metrics_df = pd.DataFrame(performance_metrics)
     all_parsed_requests_df = pd.DataFrame(all_parsed_requests)
 
-    if(DEBUG):
+    if DEBUG:
         # Show some performance metrics and a few parsed requests
         print(performance_metrics_df.head(), all_parsed_requests_df.head())
 
@@ -172,36 +155,34 @@ def extract_data_from_date_range(api_start_date=start_date, api_end_date=end_dat
     #9/25/23 THAT doesn't even work b/c old requests' sizes don't necessarily grow whenever
     #they get updated GRRR.
 
-def go_request_by_request():
+def go_request_by_request(api_start_request=start_request_num, api_end_request=end_request_num):
     def make_request(request_num):
-        url = f"https://uwisctest.assetworks.cloud/ready/api/reporting/request?request={request_num}"
-        # 10-second timeout, todo parameterize
-        response = requests.get(url, timeout=10, auth=(api_uname, ready_encryption.simple_decrypt(api_pw)))
+        url = f"{endpoint_url}request={request_num}"
+        response = requests.get(url, timeout=HTTP_TIMEOUT_TOLERANCE, auth=(api_uname, ready_encryption.simple_decrypt(api_pw)))
         request = parse_json_response(response.json())
         return request
 
-    start_request_num = 2562 #The 1st request submitted after go live
-    end_request_num = 140844 #as of 9/25/23 in readytest
-    #end_request_num = 2565
-
     start_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
-    curr_date = datetime.datetime.strptime('2019-07-01', '%Y-%m-%d')
-    print(curr_date)
+    curr_loop_date = datetime.datetime.strptime(start_date, default_date_format)
+    if DEBUG:
+        print(f'Running on : {today}')
     ready_requests = []
-    for request_num in range(start_request_num, end_request_num):
-        this_request = make_request(request_num)
-        ready_requests.append(this_request)
-        x = this_request["dateCreated"]
-        print(f'Request {request_num} created on {this_request["dateCreated"][0]}')
-        this_date = datetime.datetime.strptime(this_request["dateCreated"][0], '%Y-%m-%dT%H:%M:%S.%fZ')
-        if this_date > curr_date:
-            curr_Date = this_date
-            print(curr_Date)
-
+    for request_num in range(api_start_request, api_end_request):
+        try:
+            this_request = make_request(request_num)
+            ready_requests.append(this_request)
+            if DEBUG:
+                print(f'Request {request_num} created on {this_request["dateCreated"][0]}')
+            this_date = datetime.datetime.strptime(this_request["dateCreated"][0], '%Y-%m-%dT%H:%M:%S.%fZ')
+            if this_date > curr_loop_date:
+                curr_loop_date = this_date
+                print(f'Current date of loop: {curr_loop_date}')
+        except Exception as e:
+            print(f'Error handling request {request_num}. Error text: {str(e)}')
+            print(f'Proceeding with next reqeust')
 
     end_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     elapsed_time = end_time - start_time
     print(f'Elapsed time: {str(elapsed_time)}')
-
     return ready_requests

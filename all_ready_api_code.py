@@ -5,11 +5,15 @@ import pandas as pd
 from time import sleep, time
 import requests
 import ready_encryption
+from ready_constants import *
 
 # Function to generate dates between a start date and an end date
 def daterange(start_date_str, end_date_str):
+    start_date = datetime.datetime.strptime(start_date_str, default_date_format).date()
+    end_date = datetime.datetime.strptime(end_date_str, default_date_format).date()
     
     for n in range(int((end_date - start_date).days) + 1):
+        yield (start_date + datetime.timedelta(n)).strftime(default_date_format)
 
 def test_daterange():
     # Generate the dates
@@ -22,21 +26,24 @@ def parse_json_response(json_response):
 
     # Initialize an empty list to store the parsed request objects
     parsed_requests = []
+    # Loop through each ReADY request object in the JSON response list
     for request in json_response:
         # Remove stuff we don't care about
         fields_to_strip = ['values','additionalFieldsValues','aimStatusHistory.primaryKey', 'workflowStates', 'respondents', 'workflowResponses']
         for field in fields_to_strip:
             request.pop(field, None)
         
+        # Append the stripped-yet-raw request object to the list
         parsed_requests.append(request)
         
+    # Convert the list of ReADY request objects to a DataFrame
     parsed_requests_df = pd.DataFrame(parsed_requests)
     
     return parsed_requests_df
 
 # Define a function to make the API call to 
+# get all the ReADY requests for a particular date
 def make_api_call(date):
-    # Insert your API endpoint and parameters here
     url = f"{endpoint_url}startDate={date}&endDate={date}"
     print(url)
     # Initialize variables for retry mechanism

@@ -4,10 +4,11 @@ import json
 import pandas as pd
 from time import sleep, time
 import requests
-import ready_encryption
+import rec
 from ready_constants import *
 
 # Function to generate dates between a start date and an end date
+# yields a generator object of date ranges
 def daterange(start_date_str, end_date_str):
     start_date = datetime.datetime.strptime(start_date_str, default_date_format).date()
     end_date = datetime.datetime.strptime(end_date_str, default_date_format).date()
@@ -15,6 +16,7 @@ def daterange(start_date_str, end_date_str):
     for n in range(int((end_date - start_date).days) + 1):
         yield (start_date + datetime.timedelta(n)).strftime(default_date_format)
 
+# Prints a test, no return statement
 def test_daterange():
     # Generate the dates
     generated_dates = [single_date for single_date in daterange(start_date, end_date)]
@@ -22,6 +24,8 @@ def test_daterange():
     # Show first 5 and last 5 dates to verify
     print(f'first dates: {generated_dates[:5]}\nlast dates: {generated_dates[-5:]}')
 
+# Returns a pandas.core.frame.DataFrame that contains 
+# one record per request in the json_response
 def parse_json_response(json_response):
 
     # Initialize an empty list to store the parsed request objects
@@ -43,6 +47,7 @@ def parse_json_response(json_response):
 
 # Define a function to make the API call to 
 # get all the ReADY requests for a particular date
+# returns 
 def make_api_call(date):
     url = f"{endpoint_url}startDate={date}&endDate={date}"
     print(url)
@@ -59,7 +64,7 @@ def make_api_call(date):
         
         try:
             # Make the API call
-            response = requests.get(url, timeout=HTTP_TIMEOUT_TOLERANCE, auth=(api_uname, ready_encryption.simple_decrypt(api_pw)))
+            response = requests.get(url, timeout=HTTP_TIMEOUT_TOLERANCE, auth=(api_uname, rec.dlfdadreaqf(api_pw)))
             
             # Capture the elapsed time
             elapsed_time = time() - start_time
@@ -99,6 +104,11 @@ def make_api_call(date):
         except requests.exceptions.RequestException as e:
             # Capture the elapsed time
             elapsed_time = time() - start_time
+            print(f"RequestException occured for date {date} :: {str(e)}")
+        except Exception as e:
+            elapsed_time = time() - start_time
+            print(f"Error occured for date {date} :: {str(e)}")
+
             
             # Record performance metrics for failed attempt
             this_call_metrics = {
@@ -114,10 +124,11 @@ def make_api_call(date):
 
     return this_call_metrics, this_call_data
 
-# Set DEBUG to true so accidental calls to this func don't kick off
-# the entire ETL process, which takes a few minutes.
-def extract_data_from_date_range(api_start_date=start_date, api_end_date=end_date, DEBUG=True):
-
+# Main ETL Process -- this will extract data from the ReADY API for a 
+# given time band.  It will return the request data and performance
+# data/metadata in memory, as well as write the data and metadata to
+# timestamped files on disk.
+def extract_data_from_date_range(api_start_date=orig_start_date, api_end_date=debug_end_date):
     # List of performance metrics
     performance_metrics = []
 
@@ -126,7 +137,7 @@ def extract_data_from_date_range(api_start_date=start_date, api_end_date=end_dat
 
     # Generate dates to call the API on
     # Set DEBUG to true so accidental calls to this func don't kick off
-    date_ranges = daterange('2019-07-01' if DEBUG else api_start_date, '2019-07-10' if DEBUG else api_end_date)
+    date_ranges = daterange(api_start_date, api_end_date)
 
     # Loop through each date and make the API call
     for date in date_ranges:
@@ -144,7 +155,7 @@ def extract_data_from_date_range(api_start_date=start_date, api_end_date=end_dat
 
 
     #Persistence
-    now = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    now = datetime.datetime.now().strftime(default_long_date_format)
 
     # For performance_metrics_df
     performance_metrics_df.to_csv(performance_data_csv_file_path.format(now), index=False)
@@ -162,14 +173,17 @@ def extract_data_from_date_range(api_start_date=start_date, api_end_date=end_dat
     #9/25/23 THAT doesn't even work b/c old requests' sizes don't necessarily grow whenever
     #they get updated GRRR.
 
+# This takes forever, I haven't even calculated how long it'll take but I think it's on the
+# order of *days*.  As a function of avg response time for a one-shot API request times the
+# absurd number of ReADY requests that the DB generates
 def go_request_by_request(api_start_request=start_request_num, api_end_request=end_request_num):
     def make_request(request_num):
         url = f"{endpoint_url}request={request_num}"
-        response = requests.get(url, timeout=HTTP_TIMEOUT_TOLERANCE, auth=(api_uname, ready_encryption.simple_decrypt(api_pw)))
+        response = requests.get(url, timeout=HTTP_TIMEOUT_TOLERANCE, auth=(api_uname, rec.dlfdadreaqf(api_pw)))
         request = parse_json_response(response.json())
         return request
 
-    start_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    start_time = datetime.datetime.now().strftime(default_long_date_format)
 
     curr_loop_date = datetime.datetime.strptime(start_date, default_date_format)
     if DEBUG:
@@ -189,7 +203,7 @@ def go_request_by_request(api_start_request=start_request_num, api_end_request=e
             print(f'Error handling request {request_num}. Error text: {str(e)}')
             print(f'Proceeding with next reqeust')
 
-    end_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    end_time = datetime.datetime.now().strftime(default_long_date_format)
     elapsed_time = end_time - start_time
     print(f'Elapsed time: {str(elapsed_time)}')
     return ready_requests

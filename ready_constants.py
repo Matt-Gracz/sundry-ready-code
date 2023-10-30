@@ -25,5 +25,5 @@ performance_data_csv_file_path = 'performance_data-{}.csv'
 
 # Integer Codes
 HTTP_SUCCESS_CODE = 200
-HTTP_TIMEOUT_TOLERANCE = 10 #UOM = seconds
+HTTP_TIMEOUT_TOLERANCE = 60 #UOM = seconds
 INTER_RETRY_WAIT = 2 #UMO = seconds

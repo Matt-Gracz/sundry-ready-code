@@ -6,6 +6,7 @@ from time import sleep, time
 import requests
 import rec
 from ready_constants import *
+import traceback
 
 # Function to generate dates between a start date and an end date
 # yields a generator object of date ranges
@@ -108,6 +109,7 @@ def make_api_call(date):
         except Exception as e:
             elapsed_time = time() - start_time
             print(f"Error occured for date {date} :: {str(e)}")
+            print(traceback.format_exc())
 
             
             # Record performance metrics for failed attempt
@@ -129,6 +131,10 @@ def make_api_call(date):
 # data/metadata in memory, as well as write the data and metadata to
 # timestamped files on disk.
 def extract_data_from_date_range(api_start_date=orig_start_date, api_end_date=debug_end_date):
+
+
+    t0 = time()
+
     # List of performance metrics
     performance_metrics = []
 
@@ -136,7 +142,6 @@ def extract_data_from_date_range(api_start_date=orig_start_date, api_end_date=de
     all_parsed_requests = []
 
     # Generate dates to call the API on
-    # Set DEBUG to true so accidental calls to this func don't kick off
     date_ranges = daterange(api_start_date, api_end_date)
 
     # Loop through each date and make the API call
@@ -162,6 +167,8 @@ def extract_data_from_date_range(api_start_date=orig_start_date, api_end_date=de
 
     # For all_parsed_requests_df
     all_parsed_requests_df.to_csv(request_data_csv_file_path.format(now), index=False)
+
+    print(f'Extraction took {(time() - t0) / 60 } minutes')
 
     return performance_metrics, all_parsed_requests
 

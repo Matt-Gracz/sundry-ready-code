@@ -1,12 +1,4 @@
-#Code for actual ETL
-import datetime
-import json
-import pandas as pd
-from time import sleep, time
-import requests
-import rec
-from ready_constants import *
-import traceback
+from ready_imports import *
 
 # Function to generate dates between a start date and an end date
 # yields a generator object of date ranges
@@ -32,25 +24,37 @@ def parse_json_response(json_response):
     # Initialize an empty list to store the parsed request objects
     parsed_requests = []
     # Loop through each ReADY request object in the JSON response list
+    # and grab all the data we care about
     for request in json_response:
-        # Remove stuff we don't care about
-        fields_to_strip = ['values','additionalFieldsValues','aimStatusHistory.primaryKey', 'workflowStates', 'respondents', 'workflowResponses']
-        for field in fields_to_strip:
-            request.pop(field, None)
+        parsed_request = {}
+        for field in fields_to_include:
+            parsed_request[field] = request.get(field)
+        for value in values_to_include:
+            parsed_request[value] = request['values'].get(value)
+        for additional_field in additional_fields_to_include:
+            parsed_request[additional_field] = request['additionalFieldsValues'].get(additional_field)
         
-        # Append the stripped-yet-raw request object to the list
-        parsed_requests.append(request)
+        # Append the parsed request object to the list
+        parsed_requests.append(parsed_request)
         
     # Convert the list of ReADY request objects to a DataFrame
     parsed_requests_df = pd.DataFrame(parsed_requests)
     
     return parsed_requests_df
 
+def create_metrics(api_date_request, ready_request_date, elapsed_time, outcome, json_size, num_retries):
+    return {
+            'api_date_request' : api_date_request,
+            'ready_request_date': ready_request_date,
+            'elapsed_time': elapsed_time,
+            'outcome': outcome,
+            'json_size': json_size,
+            'num_retries': num_retries }
+
 # Define a function to make the API call to 
-# get all the ReADY requests for a particular date
-# returns 
-def make_api_call(date):
-    url = f"{endpoint_url}startDate={date}&endDate={date}"
+# get all the ReADY requests for a particular date range
+def make_api_call(date_one, date_two):
+    url = f"{endpoint_url}startDate={date_one}&endDate={date_two}"
     print(url)
     # Initialize variables for retry mechanism
     max_retries = 3
@@ -69,7 +73,7 @@ def make_api_call(date):
             
             # Capture the elapsed time
             elapsed_time = time() - start_time
-            
+
             # Check for successful status code
             if response.status_code == HTTP_SUCCESS_CODE:
                 # Parse the JSON response and store it
@@ -79,27 +83,13 @@ def make_api_call(date):
                 this_call_data = parsed_requests.to_dict(orient='records')
 
                 # Record performance metrics
-                this_call_metrics = {
-                    'api_date_request' : today,
-                    'ready_request_date': date,
-                    'elapsed_time': elapsed_time,
-                    'outcome': 'Success',
-                    'json_size': len(response.content),
-                    'num_retries': retries
-                }
-
+                this_call_metrics = create_metrics(today, date, elapsed_time, 'Success',\
+                                                    len(response.content), retries)
                 # Exit the loop
                 break
             else:
                 # Record performance metrics for failed attempt
-                this_call_metrics = {
-                    'api_date_request' : today,
-                    'ready_request_date': date,
-                    'elapsed_time': elapsed_time,
-                    'outcome': 'Failure',
-                    'json_size': 0,
-                    'num_retries': retries
-                }
+                this_call_metrics = create_metrics(today, date, elapsed_time, 'Failure', 0, retries)
                 retries += 1
                 sleep(INTER_RETRY_WAIT)
         except requests.exceptions.RequestException as e:
@@ -111,28 +101,19 @@ def make_api_call(date):
             print(f"Error occured for date {date} :: {str(e)}")
             print(traceback.format_exc())
 
-            
+    
             # Record performance metrics for failed attempt
-            this_call_metrics = {
-                'api_date_request' : today,
-                'ready_request_date': date,
-                'elapsed_time': elapsed_time,
-                'outcome': 'Local Timeout',
-                'json_size': 0,
-                'num_retries': retries
-            }
+            this_call_metrics = create_metrics(today, date, elapsed_time, 'Local Timeout', 0, retries)
             retries += 1
             sleep(INTER_RETRY_WAIT) #Wait a beat before retrying
 
     return this_call_metrics, this_call_data
 
 # Main ETL Process -- this will extract data from the ReADY API for a 
-# given time band.  It will return the request data and performance
-# data/metadata in memory, as well as write the data and metadata to
-# timestamped files on disk.
+# given time band, one day at a time.  It will return the request data
+# and performance data/metadata in memory, as well as write the data
+# and metadata to timestamped files on disk.
 def extract_data_from_date_range(api_start_date=orig_start_date, api_end_date=debug_end_date):
-
-
     t0 = time()
 
     # List of performance metrics
@@ -146,11 +127,11 @@ def extract_data_from_date_range(api_start_date=orig_start_date, api_end_date=de
 
     # Loop through each date and make the API call
     for date in date_ranges:
-        this_call_metrics, this_call_data = make_api_call(date)
+        this_call_metrics, this_call_data = make_api_call(date, date)
         performance_metrics.append(this_call_metrics)
         all_parsed_requests.extend(this_call_data)
         
-    # Convert performance metrics and all_parsed_requests to DataFrames
+    # Convert performance metrics and the parsed requests to DataFrames
     performance_metrics_df = pd.DataFrame(performance_metrics)
     all_parsed_requests_df = pd.DataFrame(all_parsed_requests)
 
@@ -162,55 +143,17 @@ def extract_data_from_date_range(api_start_date=orig_start_date, api_end_date=de
     #Persistence
     now = datetime.datetime.now().strftime(default_long_date_format)
 
-    # For performance_metrics_df
+    # Save Performance Metrics to disk
     performance_metrics_df.to_csv(performance_data_csv_file_path.format(now), index=False)
 
-    # For all_parsed_requests_df
+    # Save parsed ReADY requests to disk in tabular form
     all_parsed_requests_df.to_csv(request_data_csv_file_path.format(now), index=False)
 
-    print(f'Extraction took {(time() - t0) / 60 } minutes')
+    print(f'Total run time: {(time() - t0) / 60 } minutes')
 
     return performance_metrics, all_parsed_requests
 
-    #9/15/23 IDEA run thi over and over and save the perfor metrics at least,
-    #maybe run it 100 times overnight, 100 times during the day, 100 times on a weekend
-    #for each day, take the max payload and count that JSON's # of requets and store a
-    #date --> int map that when we run future requests, we can use to check the payload
-    #for retries.  I can't belive I'm doing that, if I do.
-    #9/25/23 THAT doesn't even work b/c old requests' sizes don't necessarily grow whenever
-    #they get updated GRRR.
-
-# This takes forever, I haven't even calculated how long it'll take but I think it's on the
-# order of *days*.  As a function of avg response time for a one-shot API request times the
-# absurd number of ReADY requests that the DB generates
-def go_request_by_request(api_start_request=start_request_num, api_end_request=end_request_num):
-    def make_request(request_num):
-        url = f"{endpoint_url}request={request_num}"
-        response = requests.get(url, timeout=HTTP_TIMEOUT_TOLERANCE, auth=(api_uname, rec.dlfdadreaqf(api_pw)))
-        request = parse_json_response(response.json())
-        return request
-
-    start_time = datetime.datetime.now().strftime(default_long_date_format)
-
-    curr_loop_date = datetime.datetime.strptime(start_date, default_date_format)
-    if DEBUG:
-        print(f'Running on : {today}')
-    ready_requests = []
-    for request_num in range(api_start_request, api_end_request):
-        try:
-            this_request = make_request(request_num)
-            ready_requests.append(this_request)
-            if DEBUG:
-                print(f'Request {request_num} created on {this_request["dateCreated"][0]}')
-            this_date = datetime.datetime.strptime(this_request["dateCreated"][0], '%Y-%m-%dT%H:%M:%S.%fZ')
-            if this_date > curr_loop_date:
-                curr_loop_date = this_date
-                print(f'Current date of loop: {curr_loop_date}')
-        except Exception as e:
-            print(f'Error handling request {request_num}. Error text: {str(e)}')
-            print(f'Proceeding with next reqeust')
-
-    end_time = datetime.datetime.now().strftime(default_long_date_format)
-    elapsed_time = end_time - start_time
-    print(f'Elapsed time: {str(elapsed_time)}')
-    return ready_requests
+# Running this script will extract all data from the range
+# stipulated in ready_constants
+print(f'range: {orig_start_date} - {end_date}')
+extract_data_from_date_range(orig_start_date, end_date)

@@ -1,2 +1,2 @@
-# sundry-ready-code
-Sundry publicly available code, data, and configuration files related to ReADY Request application dev 
+# sundry-ready-codeT
+This is now a project dedicated to ETL all ReADY request data from a ReADY instance's API, in a robust and systematic way.

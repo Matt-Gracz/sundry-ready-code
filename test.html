@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Origami Database - Browse Models</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="keywords"
+      content="origami, database, ODB, odb, find, search, diagrams, diagram, model, models, search, books,
+      publications, magazines, creator, creators, reviews, pictures, photos, ISBN, paper, paperfolding,
+      paper-folding, folding, japanese, craft, oragami">
+<meta name="abstract" content="origami diagrams, books">
+<meta name="robots" content="all, index, follow">
+<link rel="stylesheet" href="css/oriwiki.css" type="text/css">
+<link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
+<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/></head>
+
+<body class="odbbase">
+<div class="header">
+    <a href="/"><img src="images/odbbanner.jpg" alt="banner"/></a>
+    <br><form action="browseData.php" enctype="multipart/form-data" method="post">
+    <table class="table border-0">
+        <tr>
+            <td class="H2">Browse:
+                <input type="radio" name="items" value="Models" checked> Models<input type="radio" name="items" value="Publications"> Publications<input type="radio" name="items" value="Creators"> Creators<input type="radio" name="items" value="Articles"> Articles            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type='submit' name='submit' value="#">
+                <input type='submit' name='submit' value="A">
+                <input type='submit' name='submit' value="B">
+                <input type='submit' name='submit' value="C">
+                <input type='submit' name='submit' value="D">
+                <input type='submit' name='submit' value="E">
+                <input type='submit' name='submit' value="F">
+                <input type='submit' name='submit' value="G">
+                <input type='submit' name='submit' value="H">
+                <input type='submit' name='submit' value="I">
+                <input type='submit' name='submit' value="J">
+                <input type='submit' name='submit' value="K">
+                <input type='submit' name='submit' value="L">
+                <input type='submit' name='submit' value="M">
+                <input type='submit' name='submit' value="N">
+                <input type='submit' name='submit' value="O">
+                <input type='submit' name='submit' value="P">
+                <input type='submit' name='submit' value="Q">
+                <input type='submit' name='submit' value="R">
+                <input type='submit' name='submit' value="S">
+                <input type='submit' name='submit' value="T">
+                <input type='submit' name='submit' value="U">
+                <input type='submit' name='submit' value="V">
+                <input type='submit' name='submit' value="W">
+                <input type='submit' name='submit' value="X">
+                <input type='submit' name='submit' value="Y">
+                <input type='submit' name='submit' value="Z">
+            </td>
+        </tr>
+    </table>
+</form>
+</div>
+
+<div class="nav">
+        <div style="margin-bottom: 10pt;">
+        <form name="ODBLogin" action="checkUser.php" method="post">
+            Username <input type="text" name="Username"><br>
+            Password <input type="password" name="Password"><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+    <a href="mailto:moderator@oriwiki.com?subject=[ODB Mod] New Password Request&body=Please include username information:- "
+       target="_top">Forgotten password</a>
+    <hr>
+    <form name="ODBRegister" action="register.php" method="post">
+        <input type="submit" value="Register">
+    </form>
+
+<hr>
+<form action="searchresults.php" method="get">
+    Search for:-<br>
+    <input type="text" name="Term1" value=""> AND <br>
+    <input type="text" name="Term2" value=""> AND <br>
+    <input type="text" name="Term3" value="">
+    <table class="table border-0 p-1">
+        <tr>
+            <td colspan=2>Select at least one....</td>
+        </tr>
+        <tr>
+            <td>Models (46719)</td>
+            <td><input type="checkbox" name="Models" ></td>
+        </tr>
+        <tr>
+            <td> ---(Inc. Creator Names)</td>
+            <td><input type="checkbox" name="IncludeCreator" ></td>
+        </tr>
+        <tr>
+            <td>Publications (4013)</td>
+            <td><input type="checkbox" name="Publications" ></td>
+        </tr>
+        <tr>
+            <td>Creators (3300)</td>
+            <td><input type="checkbox" name="Creators" ></td>
+        </tr>
+        <tr>
+            <td>Articles (2)</td>
+            <td><input type="checkbox" name="Articles" ></td>
+        </tr>
+        <tr>
+            <td><input type="checkbox" name="ExactWord" > Use Exact Words Only</td>
+            <td></td>
+        </tr>
+    </table>
+    <input type="submit" value="Search">
+</form>
+
+<hr>
+<a href="odbInfo.php"> Database Info </a><br>
+<a href="odbHowTo.php"> FAQ: How do I.........? </a><br>
+<a href="mailto:moderator@oriwiki.com?subject=[ODB Mod]" target="_top">Contact Moderators</a><br>
+<hr>
+
+<div class=littletable>Purchases via these links will generate a small income to the Ori Wiki. Please support Ori Wiki
+    by using these links for all your purchases!
+</div>
+<a href="https://www.origami-shop.com/index.php?ref=7&affiliate_banner_id=4" target="_blank"><img
+            src="https://www.origami-shop.com/affiliation_appels_bannieres.php?ref=7&affiliate_banner_id=4"
+            alt="Origami Shop"></a>
+<br><br>
+<iframe src="https://rcm-eu.amazon-adsystem.com/e/cm?o=2&p=42&l=ez&f=ifr&linkID=8aa9a516143d7a693ea4530f684bd32a&t=origamidataba-21&tracking_id=origamidataba-21"
+        width="234" height="60" style="border: 0;"></iframe>
+<br><br>
+<iframe src="https://rcm-na.amazon-adsystem.com/e/cm?o=1&p=42&l=ur1&category=books&banner=1E7HZ0K3652JWXK4ME82&f=ifr&linkID=bba4723f533ed99634a35c5f697f44a0&t=origamidataba-20&tracking_id=origamidataba-20"
+        width="234" height="60" style="border: 0;"></iframe>
+</div>
+<div class="section">
+            <table class="table border-0">
+            <tr>
+                <td class="H1 align-left">
+                    &nbsp;                </td>
+                <td colspan="4">
+                    <div class="H1">Models (A:1->50)</div>
+                </td>
+                <td class="H1 align-right">
+                    <a href="browseModels.php?PN=2&Letter=A">Next</a>                </td>
+            </tr>
+            <tr>
+                                    <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=13823">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A"></a><br>
+                        <span class="H2">A<br>by Mark Bolitho</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=52468">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A"></a><br>
+                        <span class="H2">A<br>by Florence Temko</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=39763">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A "Neat" Neat Coaster"></a><br>
+                        <span class="H2">A "Neat" Neat Coaster<br>by  Unknown</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=46482">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Basket"></a><br>
+                        <span class="H2">A Basket<br>by  Unknown</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=39885">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Bed"></a><br>
+                        <span class="H2">A Bed<br>by  Unknown</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=39918">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Bellows"></a><br>
+                        <span class="H2">A Bellows<br>by  Unknown</span><br>
+                    </td>
+                    </tr><tr>                    <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=39915">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A bird in Flight"></a><br>
+                        <span class="H2">A bird in Flight<br>by  Unknown</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=22933">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Bird in Hand"></a><br>
+                        <span class="H2">A Bird in Hand<br>by Dai Watanabe</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=12097">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A bird in the hand"></a><br>
+                        <span class="H2">A bird in the hand<br>by Tony O'Hare</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=33595">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A bird-in-the-hand"></a><br>
+                        <span class="H2">A bird-in-the-hand<br>by Tony O'Hare</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=12390">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Bouquet of Radiance"></a><br>
+                        <span class="H2">A Bouquet of Radiance<br>by Mihoko Kittaka</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=5618">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Boy in the heian era"></a><br>
+                        <span class="H2">A Boy in the heian era<br>by Tsutomu Nakai</span><br>
+                    </td>
+                    </tr><tr>                    <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=52116">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Boy's Modest Adventure"></a><br>
+                        <span class="H2">A Boy's Modest Adventure<br>by Robert E. Neale</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=52131">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Boy's Modest Adventure"></a><br>
+                        <span class="H2">A Boy's Modest Adventure<br>by Robert E. Neale</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=50686">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Boy's Tale"></a><br>
+                        <span class="H2">A Boy's Tale<br>by Lillian Oppenheimer</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=56955">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Branch of the Flower"></a><br>
+                        <span class="H2">A Branch of the Flower<br>by Noboru Miyajima</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=38934">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Brood"></a><br>
+                        <span class="H2">A Brood<br>by Miyuki Kawamura</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55658">
+                            <img width=90% src="images/models/55658_A_Butterfly_for_Alice_Gray.jpg" alt="A Butterfly for Alice Gray"></a><br>
+                        <span class="H2">A Butterfly for Alice Gray<br>by Michael LaFosse</span><br>
+                    </td>
+                    </tr><tr>                    <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=43970">
+                            <img width=90% src="https://farm4.static.flickr.com/3189/5734690849_85f4e782c5.jpg" alt="A Butterfly for Alice Gray"></a><br>
+                        <span class="H2">A Butterfly for Alice Gray<br>by Michael G. LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55678">
+                            <img width=90% src="images/models/55678_A_Butterfly_for_Anne_Lavin.jpg" alt="A Butterfly for Anne LaVin"></a><br>
+                        <span class="H2">A Butterfly for Anne LaVin<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55675">
+                            <img width=90% src="images/models/55675_A_Butterfly_for_Diana_Wolf.jpg" alt="A Butterfly for Diana Wolf"></a><br>
+                        <span class="H2">A Butterfly for Diana Wolf<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55674">
+                            <img width=90% src="images/models/55674_A_Butterfly_for_Doris_Asano.jpg" alt="A Butterfly for Doris Asano"></a><br>
+                        <span class="H2">A Butterfly for Doris Asano<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55665">
+                            <img width=90% src="images/models/55665_A_Butterfly_for_Emiko_Kruckner.jpg" alt="A Butterfly for Emiko Kruckner"></a><br>
+                        <span class="H2">A Butterfly for Emiko Kruckner<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55668">
+                            <img width=90% src="images/models/55668_A_Butterfly_for_Eric_Joisel.jpg" alt="A Butterfly for Eric Joisel"></a><br>
+                        <span class="H2">A Butterfly for Eric Joisel<br>by Michael LaFosse</span><br>
+                    </td>
+                    </tr><tr>                    <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55649">
+                            <img width=90% src="images/models/55649_A_Butterfly_for_Guy_Kawasaki.jpg" alt="A Butterfly for Guy Kawasaki"></a><br>
+                        <span class="H2">A Butterfly for Guy Kawasaki<br>by Michael G. LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55661">
+                            <img width=90% src="images/models/55661_A_Butterfly_for_Jan_Polish.jpg" alt="A Butterfly for Jan Polish"></a><br>
+                        <span class="H2">A Butterfly for Jan Polish<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55660">
+                            <img width=90% src="images/models/55660_A_Butterfly_for_Janey_Winchell.jpg" alt="A Butterfly for Jane Winchell"></a><br>
+                        <span class="H2">A Butterfly for Jane Winchell<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55677">
+                            <img width=90% src="images/models/55677_A_Butterfly_for_June_Sakamoto.jpg" alt="A Butterfly for June Sakamoto"></a><br>
+                        <span class="H2">A Butterfly for June Sakamoto<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55667">
+                            <img width=90% src="images/models/55667_A_Butterfly_for_Killian_Mansfield.jpg" alt="A Butterfly for Killian Mansfield"></a><br>
+                        <span class="H2">A Butterfly for Killian Mansfield<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55666">
+                            <img width=90% src="images/models/55666_A_Butterfly_for_Kyoko_Kondo.jpg" alt="A Butterfly for Kyoko Kondo"></a><br>
+                        <span class="H2">A Butterfly for Kyoko Kondo<br>by Michael LaFosse</span><br>
+                    </td>
+                    </tr><tr>                    <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55679">
+                            <img width=90% src="images/models/55679_A_Butterfly_for_Kyoto.jpg" alt="A Butterfly for Kyoto"></a><br>
+                        <span class="H2">A Butterfly for Kyoto<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55670">
+                            <img width=90% src="images/models/55670_A_Butterfly_for_Lillian_Oppenheimer.jpg" alt="A Butterfly for Lillian Oppenheimer"></a><br>
+                        <span class="H2">A Butterfly for Lillian Oppenheimer<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55662">
+                            <img width=90% src="images/models/55662_A_Butterfly_for_Makoto_Yamaguchi.jpg" alt="A Butterfly for Mr. Makoto Yamaguchi"></a><br>
+                        <span class="H2">A Butterfly for Mr. Makoto Yamaguchi<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55433">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Butterfly for Patty Grodner"></a><br>
+                        <span class="H2">A Butterfly for Patty Grodner<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55664">
+                            <img width=90% src="images/models/55664_A_Butterfly_for_Robert_Lang.jpg" alt="A Butterfly for Robert Lang"></a><br>
+                        <span class="H2">A Butterfly for Robert Lang<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55680">
+                            <img width=90% src="images/models/55680_A_Butterfly_for_Russell_Cashdollar.jpg" alt="A Butterfly for Russell Cashdollar"></a><br>
+                        <span class="H2">A Butterfly for Russell Cashdollar<br>by Michael LaFosse</span><br>
+                    </td>
+                    </tr><tr>                    <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55669">
+                            <img width=90% src="images/models/55669_A_Butterfly_for_Sok_Song.jpg" alt="A Butterfly for Sok Song"></a><br>
+                        <span class="H2">A Butterfly for Sok Song<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55659">
+                            <img width=90% src="images/models/55659_A_Butterfly_for_Tony_Cheng.jpg" alt="A Butterfly for Tony Cheng"></a><br>
+                        <span class="H2">A Butterfly for Tony Cheng<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55676">
+                            <img width=90% src="images/models/55676_A_Butterfly_for_VAnn_Cornelius.jpg" alt="A Butterfly for V'Ann Cornelius"></a><br>
+                        <span class="H2">A Butterfly for V'Ann Cornelius<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=55663">
+                            <img width=90% src="images/models/55663_A_Butterfly_for_Vanessa_Gould.jpg" alt="A Butterfly for Vanessa Gould"></a><br>
+                        <span class="H2">A Butterfly for Vanessa Gould<br>by Michael LaFosse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=27151">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Case for a Pair of Scissors"></a><br>
+                        <span class="H2">A Case for a Pair of Scissors<br>by Thoki Yenn</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=39765">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Clever Candle"></a><br>
+                        <span class="H2">A Clever Candle<br>by  Unknown</span><br>
+                    </td>
+                    </tr><tr>                    <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=39799">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Clever Crustacean"></a><br>
+                        <span class="H2">A Clever Crustacean<br>by  Unknown</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=24655">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Crab and its Kid (CP)"></a><br>
+                        <span class="H2">A Crab and its Kid (CP)<br>by Meguro Toshiyuki</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=13025">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A crane wreath"></a><br>
+                        <span class="H2">A crane wreath<br>by Tomoko Fuse</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=46026">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Fishy Tale"></a><br>
+                        <span class="H2">A Fishy Tale<br>by Michel Grand</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=46479">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Folded Suqare, or New Ground Form"></a><br>
+                        <span class="H2">A Folded Suqare, or New Ground Form<br>by  Unknown</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=42982">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A four-point star with 22.5 degree points"></a><br>
+                        <span class="H2">A four-point star with 22.5 degree points<br>by Ralph Jones</span><br>
+                    </td>
+                    </tr><tr>                    <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=25443">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Frog in Choju Giga (Frolicking Birds and Animals)"></a><br>
+                        <span class="H2">A Frog in Choju Giga (Frolicking Birds and Animals)<br>by Seiji Nishikawa</span><br>
+                    </td>
+                                        <td class="align-center gallery-width ">
+                        <a href="showModel.php?ModelID=34005">
+                            <img width=90% src="images/NoModelImage.jpg" alt="A Glimpse of Paradise"></a><br>
+                        <span class="H2">A Glimpse of Paradise<br>by Nick Robinson</span><br>
+                    </td>
+                    <td class='gallery-width'>&nbsp;</td><td class='gallery-width'>&nbsp;</td><td class='gallery-width'>&nbsp;</td><td class='gallery-width'>&nbsp;</td>            </tr>
+            <tr>
+                <td class="H1 align-left">
+                    &nbsp;                </td>
+                <td colspan="4">
+                    <div class="H1">Publications (A:1->50)</div>
+                </td>
+                <td class="H1 align-right">
+                    <a href="browseModels.php?PN=2&Letter=A">Next</a>                </td>
+            </tr>
+        </table>
+
+        </div>
+</body>
+</html>
+
